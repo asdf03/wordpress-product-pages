@@ -15,6 +15,12 @@
 <body>
     <div class="container">
         <h2>購入フォーム</h2>
+        <!-- カート内の商品表示領域 -->
+        <div class="cart">
+            <h3>カート内の商品</h3>
+            <div id="cart-items"></div>
+        </div>
+        <!-- 購入フォームの内容 -->
         <form id="purchase-form">
             <div class="form-group">
                 <label for="name">お名前：</label>
@@ -35,6 +41,65 @@
     <script>
         function getCartItems() {
             console.log(JSON.parse(localStorage.getItem('cart')) || []);
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartDisplay();
+        });
+
+        function updateCartDisplay() {
+            const cartItems = getCartItems();
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            cartItems.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+
+                // 商品の詳細と現在の数量を表示
+                itemDiv.innerHTML = `
+                    <div>
+                        <span>商品名: ${item.name}</span>
+                        <span>価格: ${item.price}</span>
+                        <span>現在の数量: ${item.quantity}</span>
+                    </div>
+                    数量変更: 
+                    <select id="quantity${index}">
+                        ${generateQuantityOptions(item.quantity)}
+                    </select>
+                    <button onclick="updateQuantity(${index})">変更</button>
+                    <button onclick="removeFromCart(${index})">削除</button>
+                `;
+                cartItemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        function generateQuantityOptions(selectedQuantity) {
+            let options = '';
+            for (let i = 1; i <= 10; i++) {
+                let selected = i === selectedQuantity ? ' selected' : '';
+                options += `<option value="${i}"${selected}>${i}</option>`;
+            }
+            return options;
+        }
+
+        function updateQuantity(index) {
+            let cart = getCartItems();
+            let quantity = parseInt(document.getElementById(`quantity${index}`).value);
+            cart[index].quantity = quantity;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function removeFromCart(index) {
+            let cart = getCartItems();
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function getCartItems() {
             return JSON.parse(localStorage.getItem('cart')) || [];
         }
 

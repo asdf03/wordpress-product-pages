@@ -17,29 +17,32 @@
     <div class="container">
         <!-- 商品1 -->
         <div class="product">
-            <div class="product-header">商品名1</div>
-            <p class="product-description">商品1の説明。</p>
+            <div class="product-header">Tシャツ</div>
+            <p class="price">10000</p>
+            <p class="product-description">Tシャツの説明</p>
             <label class="quantity-label" for="quantity1">個数：</label>
             <select id="quantity1" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('商品名1', document.getElementById('quantity1').value)">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('Tシャツ', document.getElementById('quantity1').value, '10000')">カートに入れる</button>
         </div>
         
         <!-- 商品2 -->
         <div class="product">
-            <div class="product-header">商品名2</div>
-            <p class="product-description">商品2の説明。</p>
+            <div class="product-header">スエット</div>
+            <p class="price">20000</p>
+            <p class="product-description">スエットの説明</p>
             <label class="quantity-label" for="quantity2">個数：</label>
             <select id="quantity2" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('商品名2', document.getElementById('quantity2').value)">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('スエット', document.getElementById('quantity2').value, '20000')">カートに入れる</button>
         </div>
 
         <!-- 商品3 -->
         <div class="product">
-            <div class="product-header">商品名3</div>
-            <p class="product-description">商品3の説明。</p>
+            <div class="product-header">パーカー</div>
+            <p class="price">30000</p>
+            <p class="product-description">パーカーの説明。</p>
             <label class="quantity-label" for="quantity3">個数：</label>
             <select id="quantity3" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('商品名3', document.getElementById('quantity3').value)">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('パーカー', document.getElementById('quantity3').value, '30000')">カートに入れる</button>
         </div>
 
         <!-- カートの内容 -->
@@ -48,6 +51,7 @@
             <div id="cart-items">
                 <!-- カート内の商品がここに表示されます -->
             </div>
+            <button class="buy-all-button" onclick="location.href='./page-purchase.html'">全てを購入</button>
         </div>
     </div>
 
