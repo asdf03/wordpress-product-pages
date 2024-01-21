@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品ページ</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: 0 auto; }
+        .product { margin-bottom: 20px; }
+        .product-header { font-size: 24px; color: #333; }
+        .product-description { margin-top: 5px; }
+        .cart-button { background-color: blue; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        .quantity-label { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 商品1 -->
+        <div class="product">
+            <div class="product-header">商品名1</div>
+            <p class="product-description">商品1の説明。</p>
+            <label class="quantity-label" for="quantity1">個数：</label>
+            <select id="quantity1" class="quantity"></select>
+            <button class="cart-button" onclick="addToCart('商品名1', document.getElementById('quantity1').value)">カートに入れる</button>
+        </div>
+        
+        <!-- 商品2 -->
+        <div class="product">
+            <div class="product-header">商品名2</div>
+            <p class="product-description">商品2の説明。</p>
+            <label class="quantity-label" for="quantity2">個数：</label>
+            <select id="quantity2" class="quantity"></select>
+            <button class="cart-button" onclick="addToCart('商品名2', document.getElementById('quantity2').value)">カートに入れる</button>
+        </div>
+
+        <!-- 商品3 -->
+        <div class="product">
+            <div class="product-header">商品名3</div>
+            <p class="product-description">商品3の説明。</p>
+            <label class="quantity-label" for="quantity3">個数：</label>
+            <select id="quantity3" class="quantity"></select>
+            <button class="cart-button" onclick="addToCart('商品名3', document.getElementById('quantity3').value)">カートに入れる</button>
+        </div>
+
+        <!-- カートの内容 -->
+        <div class="cart">
+            <div class="cart-header">カート内の商品</div>
+            <div id="cart-items">
+                <!-- カート内の商品がここに表示されます -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ドロップダウンメニューの設定
+        function setupQuantityDropdowns() {
+            const maxQuantity = 10;
+
+            document.querySelectorAll('.quantity').forEach(dropdown => {
+                dropdown.innerHTML = '';
+
+                const defaultOption = document.createElement('option');
+                defaultOption.textContent = '--選択--';
+                defaultOption.value = '';
+                dropdown.appendChild(defaultOption);
+
+                for (let i = 1; i <= maxQuantity; i++) {
+                    const option = document.createElement('option');
+                    option.textContent = i;
+                    option.value = i;
+                    dropdown.appendChild(option);
+                }
+            });
+        }
+
+        // 商品をカートへ追加
+        function addToCart(productName, quantity) {
+            if (!quantity) {
+                alert('数量を選択してください。');
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push({ name: productName, quantity: quantity });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(productName + 'を' + quantity + '個カートに追加しました');
+            updateCartDisplay();
+            setupQuantityDropdowns(); // 数量選択をリセット
+        }
+
+        // カート表示の更新処理
+        function updateCartDisplay() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            cartItems.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `
+                    <div class="cart-description">${item.name} - ${item.quantity}個</div>
+                    <button class="remove-button" onclick="removeFromCart(${index})">削除</button>
+                `;
+                cartItemsContainer.appendChild(itemDiv);
+            });
+        }
+
+        // カート内の商品削除ボタン処理
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupQuantityDropdowns();
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>
