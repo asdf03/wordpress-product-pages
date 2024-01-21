@@ -54,6 +54,8 @@
             cartItemsContainer.innerHTML = '';
 
             cartItems.forEach((item, index) => {
+
+                const totalAmount = item.quantity * item.price;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('cart-item');
 
@@ -61,8 +63,8 @@
                 itemDiv.innerHTML = `
                     <div>
                         <span>商品名: ${item.name}</span>
-                        <span>価格: ${item.price}</span>
                         <span>現在の数量: ${item.quantity}</span>
+                        <span>価格: ${totalAmount}</span>
                     </div>
                     数量変更: 
                     <select id="quantity${index}">
@@ -103,16 +105,41 @@
             return JSON.parse(localStorage.getItem('cart')) || [];
         }
 
+        // ランダムな値を作成する関数
+        function generateRandomString(length) {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var result = '';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
         function submitPurchase() {
+            const email = document.getElementById('email').value;
+
+            // メールアドレスのバリデーション用正規表現
+            // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            // メールアドレスのフォーマットチェック
+            // if (!emailRegex.test(email)) {
+            //     alert('有効なメールアドレスを入力してください。');
+            //     return;
+            // }
+
             const cartItems = getCartItems();
+            const randomString = generateRandomString(4);
             const purchaseInfo = {
                 name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
+                email: email,
                 address: document.getElementById('address').value,
-                items: cartItems
+                randomCode: randomString,
+                items: cartItems,
             };
 
-            fetch('バックエンドのPHPエンドポイント', {
+            // 送信処理
+            fetch('http://localhost:8000/php/purchase.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -122,13 +149,14 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                // 成功時の処理（例：購入完了ページへのリダイレクト）
+                // 成功時の処理
             })
             .catch((error) => {
                 console.error('Error:', error);
                 // エラー時の処理
             });
         }
+
     </script>
 </body>
 </html>

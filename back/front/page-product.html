@@ -22,7 +22,7 @@
             <p class="product-description">Tシャツの説明</p>
             <label class="quantity-label" for="quantity1">個数：</label>
             <select id="quantity1" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('Tシャツ', document.getElementById('quantity1').value, '10000')">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('T-shirt', document.getElementById('quantity1').value, 10000)">カートに入れる</button>
         </div>
         
         <!-- 商品2 -->
@@ -32,7 +32,7 @@
             <p class="product-description">スエットの説明</p>
             <label class="quantity-label" for="quantity2">個数：</label>
             <select id="quantity2" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('スエット', document.getElementById('quantity2').value, '20000')">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('hoodie', document.getElementById('quantity2').value, 20000)">カートに入れる</button>
         </div>
 
         <!-- 商品3 -->
@@ -42,7 +42,7 @@
             <p class="product-description">パーカーの説明。</p>
             <label class="quantity-label" for="quantity3">個数：</label>
             <select id="quantity3" class="quantity"></select>
-            <button class="cart-button" onclick="addToCart('パーカー', document.getElementById('quantity3').value, '30000')">カートに入れる</button>
+            <button class="cart-button" onclick="addToCart('パーカー', document.getElementById('quantity3').value, 30000)">カートに入れる</button>
         </div>
 
         <!-- カートの内容 -->
@@ -78,14 +78,24 @@
         }
 
         // 商品をカートへ追加
-        function addToCart(productName, quantity) {
+        function addToCart(productName, quantity, price) {
             if (!quantity) {
                 alert('数量を選択してください。');
                 return;
             }
+            // 数量が数値で、正の整数であることを確認
+            if (!Number.isInteger(Number(quantity)) || Number(quantity) <= 0) {
+                alert('正しい数量を入力してください。');
+                return;
+            }
+            // 価格が数値で、0以上であることを確認
+            if (isNaN(price) || Number(price) < 0) {
+                alert('正しい価格を入力してください。');
+                return;
+            }
 
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.push({ name: productName, quantity: quantity });
+            cart.push({ name: productName, quantity: quantity, price: price });
             localStorage.setItem('cart', JSON.stringify(cart));
             alert(productName + 'を' + quantity + '個カートに追加しました');
             updateCartDisplay();
@@ -99,10 +109,11 @@
             cartItemsContainer.innerHTML = '';
 
             cartItems.forEach((item, index) => {
+                const totalAmount = item.quantity * item.price;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('cart-item');
                 itemDiv.innerHTML = `
-                    <div class="cart-description">${item.name} - ${item.quantity}個</div>
+                    <div class="cart-description">${item.name} - ${item.quantity}個 - ￥${totalAmount}</div>
                     <button class="remove-button" onclick="removeFromCart(${index})">削除</button>
                 `;
                 cartItemsContainer.appendChild(itemDiv);
